@@ -1,8 +1,8 @@
 // Initialize variables
 let displayValue = '0';
 let firstOperand = null;
-let operator = null;
 let waitingForSecondOperand = false;
+let operator = null;
 
 // Get the display element
 const screen = document.querySelector('.screen');
@@ -13,20 +13,13 @@ function inputDigit(digit) {
         displayValue = digit;
         waitingForSecondOperand = false;
     } else {
+        // Replace the display value if it's '0', otherwise append the digit
         displayValue = displayValue === '0' ? digit : displayValue + digit;
-    }
-    if (displayValue.length > 15) {
-        displayValue = displayValue.slice(0, 15);
     }
 }
 
 // Function to input a decimal point
 function inputDecimal() {
-    if (waitingForSecondOperand === true) {
-        displayValue = "0.";
-        waitingForSecondOperand = false;
-        return;
-    }
     if (!displayValue.includes('.')) {
         displayValue += '.';
     }
@@ -36,8 +29,8 @@ function inputDecimal() {
 function clear() {
     displayValue = '0';
     firstOperand = null;
-    operator = null;
     waitingForSecondOperand = false;
+    operator = null;
 }
 
 // Function to handle operators
@@ -49,7 +42,7 @@ function handleOperator(nextOperator) {
         return;
     }
 
-    if (firstOperand === null && !isNaN(inputValue)) {
+    if (firstOperand == null && !isNaN(inputValue)) {
         firstOperand = inputValue;
     } else if (operator) {
         const result = performCalculation(operator, firstOperand, inputValue);
@@ -57,8 +50,14 @@ function handleOperator(nextOperator) {
         firstOperand = result;
     }
 
-    waitingForSecondOperand = true;
-    operator = nextOperator;
+    if (nextOperator === '=') {
+        operator = null;
+        firstOperand = null;
+        waitingForSecondOperand = false;
+    } else {
+        waitingForSecondOperand = true;
+        operator = nextOperator;
+    }
 }
 
 // Function to perform calculations based on the operator
@@ -71,10 +70,7 @@ function performCalculation(op, a, b) {
         case 'multiply':
             return a * b;
         case 'divide':
-            if (b === 0) {
-                return "Error: Division by zero";
-            }
-            return a / b;
+            return b === 0 ? "Error: Division by zero" : a / b;
         default:
             return b;
     }
@@ -85,75 +81,38 @@ function updateDisplay() {
     screen.textContent = displayValue;
 }
 
-// Function to handle backspace
-function backspace() {
-    if (displayValue.length > 1) {
-        displayValue = displayValue.slice(0, -1);
-    } else {
-        displayValue = '0';
-    }
-}
-
 // Initial display update
 updateDisplay();
 
 // Event listener for button clicks
-const buttons = document.querySelector('.buttons');
-buttons.addEventListener('click', (event) => {
+const calculator = document.querySelector('.calculator');
+calculator.addEventListener('click', (event) => {
     const { target } = event;
     if (!target.matches('button')) {
         return;
     }
 
-    switch (target.dataset.action) {
-        case 'add':
-        case 'subtract':
-        case 'multiply':
-        case 'divide':
-            handleOperator(target.dataset.action);
-            break;
-        case 'decimal':
-            inputDecimal();
-            break;
-        case 'clear':
-            clear();
-            break;
-        case 'backspace':
-            backspace();
-            break;
-        case 'equals':
-            handleOperator('=');
-            break;
-        default:
-            if (target.classList.contains('number')) {
-                inputDigit(target.textContent);
-            }
-            break;
+    if (target.classList.contains('operator')) {
+        handleOperator(target.dataset.action);
+        updateDisplay();
+        return;
     }
 
-    updateDisplay();
-});
+    if (target.classList.contains('number')) {
+        inputDigit(target.textContent);
+        updateDisplay();
+        return;
+    }
 
-// Keyboard support
-document.addEventListener('keydown', (event) => {
-    if (event.key >= '0' && event.key <= '9') {
-        inputDigit(event.key);
-    } else if (event.key === '.') {
+    if (target.dataset.action === 'decimal') {
         inputDecimal();
-    } else if (event.key === '=' || event.key === 'Enter') {
-        handleOperator('=');
-    } else if (event.key === 'Backspace') {
-        backspace();
-    } else if (event.key === 'Escape') {
-        clear();
-    } else if (event.key === '+') {
-        handleOperator('add');
-    } else if (event.key === '-') {
-        handleOperator('subtract');
-    } else if (event.key === '*') {
-        handleOperator('multiply');
-    } else if (event.key === '/') {
-        handleOperator('divide');
+        updateDisplay();
+        return;
     }
-    updateDisplay();
+
+    if (target.dataset.action === 'clear') {
+        clear();
+        updateDisplay();
+        return;
+    }
 });
