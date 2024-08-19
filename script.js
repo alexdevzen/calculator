@@ -1,10 +1,13 @@
+// Initialize variables
 let displayValue = '0';
 let firstOperand = null;
 let operator = null;
 let waitingForSecondOperand = false;
 
+// Get the display element
 const screen = document.querySelector('.screen');
 
+// Function to input a digit
 function inputDigit(digit) {
     if (waitingForSecondOperand === true) {
         displayValue = digit;
@@ -17,6 +20,7 @@ function inputDigit(digit) {
     }
 }
 
+// Function to input a decimal point
 function inputDecimal() {
     if (waitingForSecondOperand === true) {
         displayValue = "0.";
@@ -28,6 +32,7 @@ function inputDecimal() {
     }
 }
 
+// Function to clear the calculator
 function clear() {
     displayValue = '0';
     firstOperand = null;
@@ -35,6 +40,7 @@ function clear() {
     waitingForSecondOperand = false;
 }
 
+// Function to handle operators
 function handleOperator(nextOperator) {
     const inputValue = parseFloat(displayValue);
 
@@ -46,7 +52,7 @@ function handleOperator(nextOperator) {
     if (firstOperand === null && !isNaN(inputValue)) {
         firstOperand = inputValue;
     } else if (operator) {
-        const result = performCalculation[operator](firstOperand, inputValue);
+        const result = performCalculation(operator, firstOperand, inputValue);
         displayValue = `${parseFloat(result.toFixed(7))}`;
         firstOperand = result;
     }
@@ -55,23 +61,31 @@ function handleOperator(nextOperator) {
     operator = nextOperator;
 }
 
-const performCalculation = {
-    '/': (firstOperand, secondOperand) => {
-        if (secondOperand === 0) {
-            return "Error: Division by zero";
-        }
-        return firstOperand / secondOperand;
-    },
-    '*': (firstOperand, secondOperand) => firstOperand * secondOperand,
-    '+': (firstOperand, secondOperand) => firstOperand + secondOperand,
-    '-': (firstOperand, secondOperand) => firstOperand - secondOperand,
-    '=': (firstOperand, secondOperand) => secondOperand
-};
+// Function to perform calculations based on the operator
+function performCalculation(op, a, b) {
+    switch (op) {
+        case 'add':
+            return a + b;
+        case 'subtract':
+            return a - b;
+        case 'multiply':
+            return a * b;
+        case 'divide':
+            if (b === 0) {
+                return "Error: Division by zero";
+            }
+            return a / b;
+        default:
+            return b;
+    }
+}
 
+// Function to update the display
 function updateDisplay() {
     screen.textContent = displayValue;
 }
 
+// Function to handle backspace
 function backspace() {
     if (displayValue.length > 1) {
         displayValue = displayValue.slice(0, -1);
@@ -80,8 +94,10 @@ function backspace() {
     }
 }
 
+// Initial display update
 updateDisplay();
 
+// Event listener for button clicks
 const buttons = document.querySelector('.buttons');
 buttons.addEventListener('click', (event) => {
     const { target } = event;
@@ -89,35 +105,33 @@ buttons.addEventListener('click', (event) => {
         return;
     }
 
-    if (target.classList.contains('operator')) {
-        handleOperator(target.dataset.action);
-        updateDisplay();
-        return;
+    switch (target.dataset.action) {
+        case 'add':
+        case 'subtract':
+        case 'multiply':
+        case 'divide':
+            handleOperator(target.dataset.action);
+            break;
+        case 'decimal':
+            inputDecimal();
+            break;
+        case 'clear':
+            clear();
+            break;
+        case 'backspace':
+            backspace();
+            break;
+        case 'equals':
+            handleOperator('=');
+            break;
+        default:
+            if (target.classList.contains('number')) {
+                inputDigit(target.textContent);
+            }
+            break;
     }
 
-    if (target.classList.contains('number')) {
-        inputDigit(target.textContent);
-        updateDisplay();
-        return;
-    }
-
-    if (target.dataset.action === 'decimal') {
-        inputDecimal();
-        updateDisplay();
-        return;
-    }
-
-    if (target.dataset.action === 'clear') {
-        clear();
-        updateDisplay();
-        return;
-    }
-
-    if (target.dataset.action === 'backspace') {
-        backspace();
-        updateDisplay();
-        return;
-    }
+    updateDisplay();
 });
 
 // Keyboard support
@@ -132,98 +146,14 @@ document.addEventListener('keydown', (event) => {
         backspace();
     } else if (event.key === 'Escape') {
         clear();
-    } else if (['+', '-', '*', '/'].includes(event.key)) {
-        handleOperator(event.key);
+    } else if (event.key === '+') {
+        handleOperator('add');
+    } else if (event.key === '-') {
+        handleOperator('subtract');
+    } else if (event.key === '*') {
+        handleOperator('multiply');
+    } else if (event.key === '/') {
+        handleOperator('divide');
     }
     updateDisplay();
 });
-
-
-/* 
-
-const pantalla = document.querySelector('.pantalla');
-
-function inputDigit(digit) {
-    if (waitingForSecondOperand === true) {
-        displayValue = digit;
-        waitingForSecondOperand = false;
-    } else {
-        displayValue = displayValue === '0' ? digit : displayValue + digit;
-    }
-}
-
-function inputDecimal() {
-    if (!displayValue.includes('.')) {
-        displayValue += '.';
-    }
-}
-
-function clear() {
-    displayValue = '0';
-}
-
-function handleOperator(nextOperator) {
-    const inputValue = parseFloat(displayValue);
-
-    if (operator && waitingForSecondOperand) {
-        operator = nextOperator;
-        return;
-    }
-
-    if (firstOperand === null) {
-        firstOperand = inputValue;
-    } else if (operator) {
-        const result = performCalculation[operator](firstOperand, inputValue);
-        displayValue = String(result);
-        firstOperand = result;
-    }
-
-    waitingForSecondOperand = true;
-    operator = nextOperator;
-}
-
-const performCalculation = {
-    '/': (firstOperand, secondOperand) => firstOperand / secondOperand,
-    '*': (firstOperand, secondOperand) => firstOperand * secondOperand,
-    '+': (firstOperand, secondOperand) => firstOperand + secondOperand,
-    '-': (firstOperand, secondOperand) => firstOperand - secondOperand,
-    '=': (firstOperand, secondOperand) => secondOperand
-};
-
-function updateDisplay() {
-    pantalla.textContent = displayValue;
-}
-
-updateDisplay();
-
-const botones = document.querySelector('.botones');
-botones.addEventListener('click', (event) => {
-    const { target } = event;
-    if (!target.matches('button')) {
-        return;
-    }
-
-    if (target.classList.contains('operador')) {
-        handleOperator(target.dataset.action);
-        updateDisplay();
-        return;
-    }
-
-    if (target.classList.contains('numero')) {
-        inputDigit(target.textContent);
-        updateDisplay();
-        return;
-    }
-
-    if (target.dataset.action === 'decimal') {
-        inputDecimal();
-        updateDisplay();
-        return;
-    }
-
-    if (target.dataset.action === 'borrar') {
-        clear();
-        updateDisplay();
-        return;
-    }
-}); */
