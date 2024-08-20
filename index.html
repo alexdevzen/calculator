@@ -9,38 +9,40 @@
 </head>
 
 <body>
+  <!-- this div for animation -->
+  <div class="slider-thumb"></div>
     <!-- Main calculator container -->
-    <div class="calculator">
+    <section class="calculator">
         <!-- Display screen for the calculator -->
         <div class="screen">0</div>
 
         <!-- Container for all the calculator buttons -->
-        <div class="buttons">
+        <div class="buttons" dir="rtl">
             <!-- Top row -->
-            <button class="clear" data-action="clear">AC</button>
             <button class="operator" data-action="divide">/</button>
-            <button class="operator" data-action="multiply">*</button>
+            <button class="clear" data-action="clear">AC</button>
 
             <!-- Number and operator buttons -->
+            <button class="operator" data-action="multiply">*</button>
             <button class="number">7</button>
             <button class="number">8</button>
             <button class="number">9</button>
-            <button class="operator" data-action="subtract">-</button>
 
+            <button class="operator" data-action="subtract">-</button>
             <button class="number">4</button>
             <button class="number">5</button>
             <button class="number">6</button>
-            <button class="operator" data-action="add">+</button>
 
+            <button class="operator" data-action="add">+</button>
             <button class="number">1</button>
             <button class="number">2</button>
             <button class="number">3</button>
-            <button class="operator equals" data-action="equals">=</button>
 
-            <button class="number zero">0</button>
+            <button class="operator" data-action="equals">=</button>
             <button class="number" data-action="decimal">.</button>
+            <button class="number zero">0</button>
         </div>
-    </div>
+    </section>
 
     <!-- Link to the JavaScript file -->
     <script src="script.js"></script>
