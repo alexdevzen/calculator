@@ -1,31 +1,25 @@
-// Initialize variables
 let displayValue = '0';
 let firstOperand = null;
 let waitingForSecondOperand = false;
 let operator = null;
 
-// Get the display element
 const screen = document.querySelector('.screen');
 
-// Function to input a digit
 function inputDigit(digit) {
     if (waitingForSecondOperand === true) {
         displayValue = digit;
         waitingForSecondOperand = false;
     } else {
-        // Replace the display value if it's '0', otherwise append the digit
         displayValue = displayValue === '0' ? digit : displayValue + digit;
     }
 }
 
-// Function to input a decimal point
 function inputDecimal() {
     if (!displayValue.includes('.')) {
         displayValue += '.';
     }
 }
 
-// Function to clear the calculator
 function clear() {
     displayValue = '0';
     firstOperand = null;
@@ -33,7 +27,6 @@ function clear() {
     operator = null;
 }
 
-// Function to handle operators
 function handleOperator(nextOperator) {
     const inputValue = parseFloat(displayValue);
 
@@ -60,7 +53,6 @@ function handleOperator(nextOperator) {
     }
 }
 
-// Function to perform calculations based on the operator
 function performCalculation(op, a, b) {
     switch (op) {
         case 'add':
@@ -76,15 +68,12 @@ function performCalculation(op, a, b) {
     }
 }
 
-// Function to update the display
 function updateDisplay() {
     screen.textContent = displayValue;
 }
 
-// Initial display update
 updateDisplay();
 
-// Event listener for button clicks
 const calculator = document.querySelector('.calculator');
 calculator.addEventListener('click', (event) => {
     const { target } = event;
