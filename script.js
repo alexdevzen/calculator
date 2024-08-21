@@ -3,6 +3,7 @@ let firstOperand = null;
 let waitingForSecondOperand = false;
 let operator = null;
 
+
 const screen = document.querySelector('.screen');
 
 function inputDigit(digit) {
