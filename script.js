@@ -5,6 +5,7 @@ let operator = null;
 let equalsPressed = false; // Restart the calculation after the math is done and a random number is pressed
 
 const calculator = document.querySelector('.calculator');
+
 const screen = document.querySelector('.screen');
 const previousNumber = document.querySelector('.previousNumber');
 const operators = document.querySelectorAll('.operator');
