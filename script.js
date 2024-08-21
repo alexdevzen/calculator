@@ -159,6 +159,11 @@ function handleKeyPress(e) {
     updateDisplay();
   }
 
+  if (e.key === '.') {
+    inputDecimal();
+    updateDisplay();
+  }
+
   if (e.key === 'Backspace') {
     deleteDigit();
     updateDisplay();
