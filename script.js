@@ -6,6 +6,7 @@ let operator = null;
 const screen = document.querySelector('.screen');
 const operandDisplay = document.querySelector('.operand-display');
 const calculator = document.querySelector('.calculator');
+const decimalButton = document.querySelector('[data-action="decimal"]');
 
 window.addEventListener('keydown', handleKeyPress);
 
@@ -16,17 +17,22 @@ function inputDigit(digit) {
   } else if (displayValue.length < 11) {
     displayValue = displayValue === '0' ? digit : displayValue + digit;
   }
+
+  decimalButton.disabled = displayValue.includes('.');
 }
 
 function inputDecimal() {
   if (!displayValue.includes('.')) {
     displayValue += '.';
+    decimalButton.disabled = true;
   }
 }
 
 // Function to delete digit
 function deleteDigit() {
   displayValue = displayValue.length > 1 ? displayValue.slice(0, -1) : '0';
+
+  decimalButton.disabled = displayValue.includes('.');
 }
 
 function clear() {
@@ -35,6 +41,22 @@ function clear() {
   waitingForSecondOperand = false;
   operator = null;
   operandDisplay.textContent = '';
+  decimalButton.disabled = false;
+}
+
+function getOperatorSymbol(op) {
+  switch (op) {
+    case 'add':
+      return '+';
+    case 'subtract':
+      return '-';
+    case 'multiply':
+      return '*';
+    case 'divide':
+      return '/';
+    default:
+      return '';
+  }
 }
 
 function handleOperator(nextOperator) {
@@ -42,12 +64,17 @@ function handleOperator(nextOperator) {
 
   if (operator && waitingForSecondOperand) {
     operator = nextOperator;
+    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
+      operator
+    )}`;
     return;
   }
 
   if (firstOperand == null && !isNaN(inputValue)) {
     firstOperand = inputValue;
-    operandDisplay.textContent = `${firstOperand}`;
+    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
+      operator
+    )}`;
   } else if (operator) {
     const result = performCalculation(operator, firstOperand, inputValue);
     displayValue = `${parseFloat(result.toFixed(7))}`;
@@ -58,17 +85,17 @@ function handleOperator(nextOperator) {
     }
 
     firstOperand = parseFloat(displayValue);
-    operandDisplay.textContent = `${firstOperand}`;
+    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
+      nextOperator
+    )}`;
   }
 
-  if (nextOperator === '=') {
-    operator = null;
-    firstOperand = null;
-    waitingForSecondOperand = false;
-    operandDisplay.textContent = '';
-  } else {
+  if (nextOperator !== '=') {
     waitingForSecondOperand = true;
     operator = nextOperator;
+    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
+      operator
+    )}`;
   }
 
   updateDisplay();
@@ -131,11 +158,12 @@ calculator.addEventListener('click', (event) => {
     return;
   }
 
-  if (target.dataset.action === 'del') {
-    deleteDigit();
-    updateDisplay();
-    return;
-  }
+  if (target.dataset.action)
+    if (target.dataset.action === 'del') {
+      deleteDigit();
+      updateDisplay();
+      return;
+    }
 
   if (target.dataset.action === 'clear') {
     clear();
@@ -166,7 +194,7 @@ function handleKeyPress(e) {
   }
 
   if (e.key === 'Enter') {
-    handleOperator('=');
+    handleOperator('equals');
     updateDisplay();
   }
 
