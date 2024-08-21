@@ -5,6 +5,69 @@ body {
   height: 100vh;
   margin: 0;
   font-family: Arial, sans-serif;
+  background: #33cccc;
+  animation: color 9s infinite linear;
+  height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* background animation */
+@keyframes color {
+  0% {
+    background: #33cccc;
+  }
+  20% {
+    background: #33cc36;
+  }
+  40% {
+    background: #b8cc33;
+  }
+  60% {
+    background: #fcca00;
+  }
+  80% {
+    background: #33cc36;
+  }
+  100% {
+    background: #33cccc;
+  }
+}
+
+.slider-thumb::before {
+  position: fixed;
+  content: '';
+  left: calc(50% - 225px);
+  top: 20%;
+  width: 450px;
+  height: 450px;
+  background: #17141d;
+  border-radius: 62% 47% 82% 35% / 45% 45% 80% 66%;
+  will-change: border-radius, transform, opacity;
+  animation: sliderShape 5s linear infinite;
+  display: block;
+  z-index: 1;
+  -webkit-animation: sliderShape 5s linear infinite;
+}
+
+/* slider thumb animation */
+@keyframes sliderShape {
+  0%,
+  100% {
+    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+    transform: translate3d(0, 0, 0) rotateZ(0.01deg);
+  }
+  34% {
+    border-radius: 70% 30% 46% 54% / 30% 29% 71% 70%;
+    transform: translate3d(0, 5px, 0) rotateZ(0.01deg);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) rotateZ(0.01deg);
+  }
+  67% {
+    border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
+    transform: translate3d(0, -3px, 0) rotateZ(0.01deg);
+  }
 }
 
 .calculator {
@@ -46,9 +109,4 @@ button {
 
 .zero {
   grid-column: span 2;
-}
-
-.equals {
-  grid-row: span 2;
-  height: 85px;
 }
