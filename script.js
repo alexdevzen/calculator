@@ -4,12 +4,16 @@ let waitingForSecondOperand = false;
 let operator = null;
 
 const screen = document.querySelector('.screen');
+const operandDisplay = document.querySelector('.operand-display');
+const calculator = document.querySelector('.calculator');
+
+window.addEventListener('keydown', handleKeyPress);
 
 function inputDigit(digit) {
   if (waitingForSecondOperand === true) {
     displayValue = digit;
     waitingForSecondOperand = false;
-  } else {
+  } else if (displayValue.length < 11) {
     displayValue = displayValue === '0' ? digit : displayValue + digit;
   }
 }
@@ -20,11 +24,17 @@ function inputDecimal() {
   }
 }
 
+// Function to delete digit
+function deleteDigit() {
+  displayValue = displayValue.length > 1 ? displayValue.slice(0, -1) : '0';
+}
+
 function clear() {
   displayValue = '0';
   firstOperand = null;
   waitingForSecondOperand = false;
   operator = null;
+  operandDisplay.textContent = '';
 }
 
 function handleOperator(nextOperator) {
@@ -37,20 +47,31 @@ function handleOperator(nextOperator) {
 
   if (firstOperand == null && !isNaN(inputValue)) {
     firstOperand = inputValue;
+    operandDisplay.textContent = `${firstOperand}`;
   } else if (operator) {
     const result = performCalculation(operator, firstOperand, inputValue);
     displayValue = `${parseFloat(result.toFixed(7))}`;
-    firstOperand = result;
+
+    // Ensure that the result does not exceed 11 digits
+    if (displayValue.length > 11) {
+      displayValue = displayValue.slice(0, 11);
+    }
+
+    firstOperand = parseFloat(displayValue);
+    operandDisplay.textContent = `${firstOperand}`;
   }
 
   if (nextOperator === '=') {
     operator = null;
     firstOperand = null;
     waitingForSecondOperand = false;
+    operandDisplay.textContent = '';
   } else {
     waitingForSecondOperand = true;
     operator = nextOperator;
   }
+
+  updateDisplay();
 }
 
 function performCalculation(op, a, b) {
@@ -62,7 +83,7 @@ function performCalculation(op, a, b) {
     case 'multiply':
       return a * b;
     case 'divide':
-      return b === 0 ? "Error: Division by zero" : a / b;
+      return b === 0 ? 'Error: Division by zero' : a / b;
     default:
       return b;
   }
@@ -74,11 +95,22 @@ function updateDisplay() {
 
 updateDisplay();
 
-const calculator = document.querySelector('.calculator');
 calculator.addEventListener('click', (event) => {
   const { target } = event;
+
   if (!target.matches('button')) {
     return;
+  }
+
+  // If it's a .key-others button, remove the filter immediately after click
+  if (target.classList.contains('key-others')) {
+    // Temporarily add the filter effect
+    target.style.filter = 'brightness(170%)';
+
+    // Remove the filter effect after the transition ends
+    setTimeout(() => {
+      target.style.filter = 'none';
+    }, 200);
   }
 
   if (target.classList.contains('operator')) {
@@ -99,9 +131,58 @@ calculator.addEventListener('click', (event) => {
     return;
   }
 
+  if (target.dataset.action === 'del') {
+    deleteDigit();
+    updateDisplay();
+    return;
+  }
+
   if (target.dataset.action === 'clear') {
     clear();
     updateDisplay();
     return;
   }
 });
+
+// Handling keyboard support
+function handleKeyPress(e) {
+  e.preventDefault();
+
+  if (e.key >= 0 && e.key <= 9) {
+    inputDigit(e.key);
+    updateDisplay();
+  }
+
+  const operatorMap = {
+    '+': 'add',
+    '-': 'subtract',
+    '*': 'multiply',
+    '/': 'divide',
+  };
+
+  if (operatorMap[e.key]) {
+    handleOperator(operatorMap[e.key]);
+    updateDisplay();
+  }
+
+  if (e.key === 'Enter') {
+    handleOperator('=');
+    updateDisplay();
+  }
+
+  if (e.key === '.') {
+    inputDecimal();
+    updateDisplay();
+  }
+
+  if (e.key === 'Backspace') {
+    deleteDigit();
+    updateDisplay();
+  }
+
+  // Handle clear key (if needed, assuming it's 'c' or 'Escape')
+  if (e.key === 'Escape' || e.key === 'c') {
+    clear();
+    updateDisplay();
+  }
+}
