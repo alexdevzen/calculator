@@ -1,17 +1,54 @@
+// Calculator State
 let displayValue = '0';
 let firstOperand = null;
 let waitingForSecondOperand = false;
 let operator = null;
 
+// DOM Elements
 const screen = document.querySelector('.screen');
 const operandDisplay = document.querySelector('.operand-display');
 const calculator = document.querySelector('.calculator');
 const decimalButton = document.querySelector('[data-action="decimal"]');
 
+// Initialize Display
+updateDisplay();
+
+// Event Listeners
+calculator.addEventListener('click', handleButtonClick);
 window.addEventListener('keydown', handleKeyPress);
 
+// Helper Functions
+function updateDisplay() {
+  screen.textContent = displayValue;
+}
+
+function resetCalculator() {
+  displayValue = '0';
+  firstOperand = null;
+  waitingForSecondOperand = false;
+  operator = null;
+  operandDisplay.textContent = '';
+  decimalButton.disabled = false;
+  updateDisplay();
+}
+
+function updateOperandDisplay(op) {
+  operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(op)}`;
+}
+
+function getOperatorSymbol(op) {
+  const symbols = {
+    add: '+',
+    subtract: '-',
+    multiply: '*',
+    divide: '/',
+  };
+  return symbols[op] || '';
+}
+
+// Main Functions
 function inputDigit(digit) {
-  if (waitingForSecondOperand === true) {
+  if (waitingForSecondOperand) {
     displayValue = digit;
     waitingForSecondOperand = false;
   } else if (displayValue.length < 11) {
@@ -28,35 +65,9 @@ function inputDecimal() {
   }
 }
 
-// Function to delete digit
 function deleteDigit() {
   displayValue = displayValue.length > 1 ? displayValue.slice(0, -1) : '0';
-
   decimalButton.disabled = displayValue.includes('.');
-}
-
-function clear() {
-  displayValue = '0';
-  firstOperand = null;
-  waitingForSecondOperand = false;
-  operator = null;
-  operandDisplay.textContent = '';
-  decimalButton.disabled = false;
-}
-
-function getOperatorSymbol(op) {
-  switch (op) {
-    case 'add':
-      return '+';
-    case 'subtract':
-      return '-';
-    case 'multiply':
-      return '*';
-    case 'divide':
-      return '/';
-    default:
-      return '';
-  }
 }
 
 function handleOperator(nextOperator) {
@@ -64,153 +75,96 @@ function handleOperator(nextOperator) {
 
   if (operator && waitingForSecondOperand) {
     operator = nextOperator;
-    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
-      operator
-    )}`;
+    updateOperandDisplay(operator);
     return;
   }
 
   if (firstOperand == null && !isNaN(inputValue)) {
     firstOperand = inputValue;
-    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
-      operator
-    )}`;
   } else if (operator) {
     const result = performCalculation(operator, firstOperand, inputValue);
     displayValue = `${parseFloat(result.toFixed(7))}`;
-
-    // Ensure that the result does not exceed 11 digits
-    if (displayValue.length > 11) {
-      displayValue = displayValue.slice(0, 11);
-    }
-
+    if (displayValue.length > 11) displayValue = displayValue.slice(0, 11);
     firstOperand = parseFloat(displayValue);
-    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
-      nextOperator
-    )}`;
   }
 
   if (nextOperator !== '=') {
-    waitingForSecondOperand = true;
     operator = nextOperator;
-    operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(
-      operator
-    )}`;
+    waitingForSecondOperand = true;
+    updateOperandDisplay(operator);
+  } else {
+    operator = null;
+    operandDisplay.textContent = '';
   }
 
   updateDisplay();
 }
 
 function performCalculation(op, a, b) {
-  switch (op) {
-    case 'add':
-      return a + b;
-    case 'subtract':
-      return a - b;
-    case 'multiply':
-      return a * b;
-    case 'divide':
-      return b === 0 ? 'Error: Division by zero' : a / b;
-    default:
-      return b;
-  }
+  const operations = {
+    add: (a, b) => a + b,
+    subtract: (a, b) => a - b,
+    multiply: (a, b) => a * b,
+    divide: (a, b) => (b === 0 ? 'Error' : a / b),
+  };
+  return operations[op] ? operations[op](a, b) : b;
 }
 
-function updateDisplay() {
-  screen.textContent = displayValue;
-}
-
-updateDisplay();
-
-calculator.addEventListener('click', (event) => {
+// Event Handlers
+function handleButtonClick(event) {
   const { target } = event;
 
-  if (!target.matches('button')) {
-    return;
-  }
+  if (!target.matches('button')) return;
 
-  // If it's a .key-others button, remove the filter immediately after click
   if (target.classList.contains('key-others')) {
-    // Temporarily add the filter effect
     target.style.filter = 'brightness(170%)';
-
-    // Remove the filter effect after the transition ends
-    setTimeout(() => {
-      target.style.filter = 'none';
-    }, 200);
+    setTimeout(() => (target.style.filter = 'none'), 200);
   }
+
+  const action = target.dataset.action;
 
   if (target.classList.contains('operator')) {
-    handleOperator(target.dataset.action);
-    updateDisplay();
-    return;
-  }
-
-  if (target.classList.contains('number')) {
+    handleOperator(action);
+  } else if (target.classList.contains('number')) {
     inputDigit(target.textContent);
-    updateDisplay();
-    return;
-  }
-
-  if (target.dataset.action === 'decimal') {
+  } else if (action === 'decimal') {
     inputDecimal();
-    updateDisplay();
-    return;
+  } else if (action === 'del') {
+    deleteDigit();
+  } else if (action === 'clear') {
+    resetCalculator();
   }
 
-  if (target.dataset.action)
-    if (target.dataset.action === 'del') {
-      deleteDigit();
-      updateDisplay();
-      return;
-    }
+  updateDisplay();
+}
 
-  if (target.dataset.action === 'clear') {
-    clear();
-    updateDisplay();
-    return;
-  }
-});
-
-// Handling keyboard support
 function handleKeyPress(e) {
   e.preventDefault();
 
-  if (e.key >= 0 && e.key <= 9) {
-    inputDigit(e.key);
-    updateDisplay();
-  }
-
-  const operatorMap = {
-    '+': 'add',
-    '-': 'subtract',
-    '*': 'multiply',
-    '/': 'divide',
+  const keyMap = {
+    0: () => inputDigit('0'),
+    1: () => inputDigit('1'),
+    2: () => inputDigit('2'),
+    3: () => inputDigit('3'),
+    4: () => inputDigit('4'),
+    5: () => inputDigit('5'),
+    6: () => inputDigit('6'),
+    7: () => inputDigit('7'),
+    8: () => inputDigit('8'),
+    9: () => inputDigit('9'),
+    '+': () => handleOperator('add'),
+    '-': () => handleOperator('subtract'),
+    '*': () => handleOperator('multiply'),
+    '/': () => handleOperator('divide'),
+    '.': inputDecimal,
+    Enter: () => handleOperator('equals'),
+    Backspace: deleteDigit,
+    Escape: resetCalculator,
+    c: resetCalculator,
   };
 
-  if (operatorMap[e.key]) {
-    handleOperator(operatorMap[e.key]);
-    updateDisplay();
-  }
-
-  if (e.key === 'Enter') {
-    handleOperator('equals');
-    updateDisplay();
-  }
-
-  if (e.key === '.') {
-    inputDecimal();
-    updateDisplay();
-  }
-
-  if (e.key === 'Backspace') {
-    deleteDigit();
-    updateDisplay();
-  }
-
-  // Handle clear key (if needed, assuming it's 'c' or 'Escape')
-  if (e.key === 'Escape' || e.key === 'c') {
-    clear();
+  if (keyMap[e.key]) {
+    keyMap[e.key]();
     updateDisplay();
   }
 }
