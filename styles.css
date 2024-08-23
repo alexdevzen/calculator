@@ -1,31 +1,33 @@
 body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
+  padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #fff5e1;
+  box-sizing: border-box;
 }
 
 header {
-  justify-content: center;
-  margin-bottom: 50px;
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 10px 0;
 }
 
-h1, h3 {
-  font-weight: 100;
-  font-size: 2rem;
-  text-align: center;
-  line-height: 1.4;
-  position: relative;
+h1 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #333;
   margin: 0;
   padding: 0.5rem;
 }
 
-p {
-  text-align: center;
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .calculator {
@@ -33,22 +35,25 @@ p {
   padding: 25px;
   width: 350px;
   border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 .operand-display {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  padding-left: 5px;
+  padding: 5px;
   text-align: end;
   background: transparent;
   color: #fff;
+  min-height: 1.5em;
 }
 
 .screen {
   width: 100%;
   font-size: 3.5rem;
   margin-bottom: 20px;
-  padding-left: 5px;
+  padding: 5px;
   text-align: end;
   background: transparent;
   color: #fff;
@@ -59,8 +64,7 @@ p {
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-row-gap: 15px;
-  grid-column-gap: 10px;
+  grid-gap: 15px;
 }
 
 button {
@@ -72,12 +76,12 @@ button {
   cursor: pointer;
   height: 65px;
   width: 65px;
+  transition: all 0.2s ease-in;
 }
 
 button:active,
 button:focus {
   filter: brightness(170%);
-  transition: all 0.2s ease-in;
 }
 
 .key-zero {
@@ -103,27 +107,59 @@ button:focus {
   color: #000000;
 }
 
-.key-others:active,
-.key-others:focus {
-  transition: all 0.2s ease-in;
+footer {
+  margin-top: 30px;
+  text-align: center;
+  color: #666;
+  padding: 0 20px;
 }
 
-footer {
-  margin-top: 50px;
+h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #555;
+  margin: 0 0 10px;
+  padding: 0.5rem;
+}
+
+p {
+  max-width: 100%;
+  margin: 0 auto;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: 430px) {
-  .calculator {
-    width: calc(100% - 50px);
-    border-radius: 0;
+  body {
+    padding: 10px;
   }
 
   h1 {
-    font-weight: 700;
+    font-size: 2rem;
   }
 
   h3 {
     font-size: 1.2rem;
-    font-weight: 700;
+  }
+
+  .calculator {
+    width: 100%;
+    max-width: 350px;
+    padding: 15px;
+  }
+
+  .buttons {
+    grid-gap: 10px;
+  }
+
+  button {
+    height: 55px;
+    width: 55px;
+    font-size: 1.2rem;
+  }
+
+  footer {
+    padding: 0 10px;
   }
 }
