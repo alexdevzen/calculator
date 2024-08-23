@@ -36,6 +36,13 @@ function updateOperandDisplay(op) {
   operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(op)}`;
 }
 
+function displayError() {
+  screen.textContent = 'Error: Zero?!';
+  setTimeout(() => {
+    resetCalculator();
+  }, 2000);
+}
+
 function getOperatorSymbol(op) {
   const symbols = {
     add: '+',
@@ -101,13 +108,22 @@ function handleOperator(nextOperator) {
 }
 
 function performCalculation(op, a, b) {
-  const operations = {
-    add: (a, b) => a + b,
-    subtract: (a, b) => a - b,
-    multiply: (a, b) => a * b,
-    divide: (a, b) => (b === 0 ? 'Error' : a / b),
-  };
-  return operations[op] ? operations[op](a, b) : b;
+  switch (op) {
+    case 'add':
+      return a + b;
+    case 'subtract':
+      return a - b;
+    case 'multiply':
+      return a * b;
+    case 'divide':
+      if (b === 0) {
+        displayError();
+        return '0';
+      }
+      return a / b;
+    default:
+      return b;
+  }
 }
 
 // Event Handlers
