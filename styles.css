@@ -1,59 +1,70 @@
+/* Setting up the basic structure of the page */
 body {
+  font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  align-items: center;
   background-color: #fff5e1;
+  /* Light cream background */
+  margin: 0;
+  padding: 20px 0;
+  color: #fff;
+  min-height: 100vh;
+  /* Ensures the body takes at least the full height of the viewport */
   box-sizing: border-box;
 }
 
 header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding: 10px 0;
+  margin-bottom: 20px;
 }
 
-h1 {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #333;
+h1,
+h3 {
+  font-weight: 100;
+  font-size: 2rem;
+  text-align: center;
+  line-height: 1.4;
+  position: relative;
   margin: 0;
   padding: 0.5rem;
+  color: #333;
+  /* Dark gray color for better readability */
 }
 
-main {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+p {
+  text-align: center;
+  max-width: 100%;
+  margin: 0 auto;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: #666;
 }
 
+/* Main calculator container */
 .calculator {
   background: #000000;
   padding: 25px;
   width: 350px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .operand-display {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  padding: 5px;
+  padding-left: 5px;
   text-align: end;
   background: transparent;
   color: #fff;
-  min-height: 1.5em;
 }
 
+/* Main display screen of the calculator */
 .screen {
   width: 100%;
   font-size: 3.5rem;
   margin-bottom: 20px;
-  padding: 5px;
+  padding-left: 5px;
   text-align: end;
   background: transparent;
   color: #fff;
@@ -61,12 +72,15 @@ main {
   outline: none;
 }
 
+/* Container for all calculator buttons */
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  /* Creates a 4x4 grid */
   grid-gap: 15px;
 }
 
+/* General button styles */
 button {
   background: #333333;
   color: #fff;
@@ -75,88 +89,72 @@ button {
   border-radius: 15%;
   cursor: pointer;
   height: 65px;
-  width: 65px;
-  transition: all 0.2s ease-in;
+  width: 100%;
+  padding: 0;
 }
 
+/* Button hover and focus effects */
 button:active,
 button:focus {
   filter: brightness(170%);
+  transition: all 0.2s ease-in;
 }
 
+/* Special style for the zero button */
 .key-zero {
   grid-column: span 2;
-  width: 100%;
   border-radius: 30px;
 }
 
+/* Style for the equals button */
 .operator.equals {
   grid-row: span 2;
-  height: 100%;
+  height: 145px;
   border-radius: 30px;
   background: #379777;
   color: #fff;
 }
 
+/* Style for operator buttons */
 .operator {
   background: #379777;
 }
 
+/* Style for other special keys (like clear and delete) */
 .key-others {
   background: #a6a6a6;
   color: #000000;
 }
 
+/* Hover effect for special keys */
+.key-others:active,
+.key-others:focus {
+  transition: all 0.2s ease-in;
+}
+
+/* Footer styles */
 footer {
-  margin-top: 30px;
-  text-align: center;
-  color: #666;
+  margin-top: 50px;
   padding: 0 20px;
+  text-align: center;
 }
 
-h3 {
-  font-size: 1.5rem;
-  font-weight: 300;
-  color: #555;
-  margin: 0 0 10px;
-  padding: 0.5rem;
-}
-
-p {
-  max-width: 100%;
-  margin: 0 auto;
-  line-height: 1.6;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
+/* Media query for responsive design on smaller screens */
 @media (max-width: 430px) {
-  body {
-    padding: 10px;
+  .calculator {
+    width: calc(100% - 50px);
+    /* Makes calculator almost full width on mobile */
+    border-radius: 10px;
+    margin: 0 auto;
   }
 
   h1 {
-    font-size: 2rem;
+    font-weight: 700;
   }
 
   h3 {
     font-size: 1.2rem;
-  }
-
-  .calculator {
-    width: 100%;
-    max-width: 350px;
-    padding: 15px;
-  }
-
-  .buttons {
-    grid-gap: 10px;
-  }
-
-  button {
-    height: 55px;
-    width: 55px;
-    font-size: 1.2rem;
+    font-weight: 700;
   }
 
   footer {
