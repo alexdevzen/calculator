@@ -4,27 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
+    <link rel="icon" type="image/svg+xml" href="./images/favicon.ico">
     <link rel="stylesheet" href="styles.css">
+    <title>The Calculator App</title>
 </head>
 
 <body>
     <header>
         <h1>The Calculator App</h1>
     </header>
-    <!-- Main calculator container -->
+    <!-- Calculator -->
     <main class="calculator">
-        <!-- Display screen for the calculator -->
+        <!-- Display -->
         <div class="operand-display"></div>
         <div class="screen">0</div>
-        <!-- Container for all the calculator buttons -->
+        <!-- Buttons -->
         <section class="buttons">
-            <!--  Top row  -->
+            <!-- Top row -->
             <button type="button" class="key-others clear" data-action="clear">AC</button>
             <button type="button" class="key-others del" data-action="del">DEL</button>
-            <button type="button" class="operator" data-action="divide" >/</button>
+            <button type="button" class="operator" data-action="divide">/</button>
             <button type="button" class="operator" data-action="multiply">*</button>
-            <!--  Number and operator buttons -->
+            <!-- Numbers and operators -->
             <button type="button" class="number">7</button>
             <button type="button" class="number">8</button>
             <button type="button" class="number">9</button>
@@ -40,14 +41,17 @@
             <button type="button" class="key-zero number">0</button>
             <button type="button" class="number" data-action="decimal">.</button>
         </section>
-      </main>
+    </main>
 
     <footer>
-        <h3>A simple, user-friendly calculator app designed for basic arithmetic operations.</h3> 
-        <p>It is designed for ease of use with both mouse and keyboard inputs, making calculations quick and efficient.</p>
+        <h3>A simple, user-friendly calculator app designed for basic arithmetic operations.</h3>
+        <p>It is designed for ease of use with both mouse and keyboard inputs,
+            making calculations quick and efficient.
+        </p>
     </footer>
 
-    <!-- Link to the JavaScript file -->
+    <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
+
 </html>

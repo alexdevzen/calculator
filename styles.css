@@ -1,23 +1,23 @@
-/* Setting up the basic structure of the page */
+/* Page layout */
 body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #fff5e1;
-  /* Light cream background */
   margin: 0;
   padding: 20px 0;
   color: #fff;
   min-height: 100vh;
-  /* Ensures the body takes at least the full height of the viewport */
   box-sizing: border-box;
 }
 
+/* Header spacing */
 header {
   margin-bottom: 20px;
 }
 
+/* Heading styles */
 h1,
 h3 {
   font-weight: 100;
@@ -28,9 +28,9 @@ h3 {
   margin: 0;
   padding: 0.5rem;
   color: #333;
-  /* Dark gray color for better readability */
 }
 
+/* Paragraph styles */
 p {
   text-align: center;
   max-width: 100%;
@@ -41,7 +41,7 @@ p {
   color: #666;
 }
 
-/* Main calculator container */
+/* Calculator container */
 .calculator {
   background: #000000;
   padding: 25px;
@@ -50,6 +50,7 @@ p {
   box-sizing: border-box;
 }
 
+/* Operand display */
 .operand-display {
   font-size: 1.5rem;
   margin-bottom: 10px;
@@ -59,7 +60,7 @@ p {
   color: #fff;
 }
 
-/* Main display screen of the calculator */
+/* Main display screen */
 .screen {
   width: 100%;
   font-size: 3.5rem;
@@ -72,15 +73,14 @@ p {
   outline: none;
 }
 
-/* Container for all calculator buttons */
+/* Button grid */
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  /* Creates a 4x4 grid */
   grid-gap: 15px;
 }
 
-/* General button styles */
+/* Button styles */
 button {
   background: #333333;
   color: #fff;
@@ -93,20 +93,20 @@ button {
   padding: 0;
 }
 
-/* Button hover and focus effects */
+/* Button hover/focus */
 button:active,
 button:focus {
   filter: brightness(170%);
   transition: all 0.2s ease-in;
 }
 
-/* Special style for the zero button */
+/* Zero button */
 .key-zero {
   grid-column: span 2;
   border-radius: 30px;
 }
 
-/* Style for the equals button */
+/* Equals button */
 .operator.equals {
   grid-row: span 2;
   height: 145px;
@@ -115,35 +115,34 @@ button:focus {
   color: #fff;
 }
 
-/* Style for operator buttons */
+/* Operator buttons */
 .operator {
   background: #379777;
 }
 
-/* Style for other special keys (like clear and delete) */
+/* Special keys */
 .key-others {
   background: #a6a6a6;
   color: #000000;
 }
 
-/* Hover effect for special keys */
+/* Special keys hover/focus */
 .key-others:active,
 .key-others:focus {
   transition: all 0.2s ease-in;
 }
 
-/* Footer styles */
+/* Footer */
 footer {
   margin-top: 50px;
   padding: 0 20px;
   text-align: center;
 }
 
-/* Media query for responsive design on smaller screens */
+/* Mobile styles */
 @media (max-width: 430px) {
   .calculator {
     width: calc(100% - 50px);
-    /* Makes calculator almost full width on mobile */
     border-radius: 10px;
     margin: 0 auto;
   }
