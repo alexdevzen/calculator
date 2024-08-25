@@ -36,8 +36,9 @@ function updateOperandDisplay(op) {
   operandDisplay.textContent = `${firstOperand} ${getOperatorSymbol(op)}`;
 }
 
+// Updated error display function
 function displayError() {
-  screen.textContent = 'Error: Zero?!';
+  screen.textContent = 'Error';
   setTimeout(() => {
     resetCalculator();
   }, 2000);
@@ -90,9 +91,17 @@ function handleOperator(nextOperator) {
     firstOperand = inputValue;
   } else if (operator) {
     const result = performCalculation(operator, firstOperand, inputValue);
-    displayValue = `${parseFloat(result.toFixed(7))}`;
-    if (displayValue.length > 11) displayValue = displayValue.slice(0, 11);
-    firstOperand = parseFloat(displayValue);
+
+    // Check if the result is a valid number before processing
+    if (typeof result === 'number' && !isNaN(result)) {
+      displayValue = `${parseFloat(result.toFixed(4))}`;
+      if (displayValue.length > 11) displayValue = displayValue.slice(0, 11);
+      firstOperand = parseFloat(displayValue);
+    } else {
+      // Display error for invalid results (e.g., division by zero)
+      displayError();
+      return;
+    }
   }
 
   if (nextOperator !== '=') {
@@ -116,9 +125,9 @@ function performCalculation(op, a, b) {
     case 'multiply':
       return a * b;
     case 'divide':
+      // Handle division by zero
       if (b === 0) {
-        displayError();
-        return '0';
+        return NaN;
       }
       return a / b;
     default:
